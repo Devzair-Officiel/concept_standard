@@ -1,0 +1,5 @@
+---
+interface Props { index: string; label: string; aside?: string; }
+const { index, label, aside } = Astro.props;
+---
+<div class="section-label micro"><span>{index} / {label}</span>{aside && <span>{aside}</span>}</div>

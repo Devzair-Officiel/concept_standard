@@ -1,0 +1,67 @@
+{
+  "date": "20 octobre 2026 à 12:51",
+  "tests": {
+    "startTime": "2026-10-20T10:51:50.418Z",
+    "duration": 14276.536,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "workers": 1,
+  "widths": [
+    320,
+    360,
+    390,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "routes": [
+    "/",
+    "/architecture/villa-ke",
+    "/editions/chaise-1989"
+  ],
+  "axeViewports": [
+    390,
+    1440
+  ],
+  "lighthouse": {
+    "version": "13.5.0",
+    "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "date": "2026-10-20T10:53:12.469Z",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 66
+    },
+    "settings": {
+      "formFactor": "mobile",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "throttlingMethod": "simulate",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      }
+    },
+    "metrics": {
+      "fcp": 1206.7965,
+      "lcp": 1506.7965,
+      "tbt": 0,
+      "cls": 0.011290602749775825
+    }
+  },
+  "externalPhotosEnabled": false
+}

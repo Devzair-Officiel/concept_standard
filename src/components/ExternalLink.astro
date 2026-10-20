@@ -1,0 +1,6 @@
+---
+import Icon from './Icon.astro';
+interface Props { href: string; class?: string; }
+const { href, class: className = '' } = Astro.props;
+---
+<a href={href} class:list={['external-link', className]} target="_blank" rel="noopener noreferrer"><slot /><Icon /><span class="sr-only"> — site officiel, nouvel onglet</span></a>

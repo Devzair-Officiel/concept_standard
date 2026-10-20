@@ -1,0 +1,13 @@
+---
+import Media from './Media.astro';
+import Icon from './Icon.astro';
+import type { Media as MediaItem } from '../data/media';
+interface Props { title: string; subtitle: string; href: string; item: MediaItem; index: string; universe: 'architecture' | 'editions'; external?: boolean; }
+const { title, subtitle, href, item, index, universe, external = false } = Astro.props;
+---
+<article class="project-card" data-universe={universe}>
+  <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+    <div class="card-visual"><Media item={item} /><span class="card-index micro">{index} / {external ? 'Catalogue officiel' : universe === 'architecture' ? 'Architecture' : 'Éditions'}</span><span class="circle-button"><Icon /></span></div>
+    <div class="card-meta"><h3>{title}</h3><span class="micro">{subtitle}{external && <span class="sr-only"> — site officiel, nouvel onglet</span>}</span></div>
+  </a>
+</article>

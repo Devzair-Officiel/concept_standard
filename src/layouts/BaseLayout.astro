@@ -1,0 +1,50 @@
+---
+import '@fontsource-variable/dm-sans/wght.css';
+import '@fontsource-variable/space-grotesk/wght.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+interface Props { title: string; description: string; current: 'home' | 'architecture' | 'editions'; }
+const { title, description, current } = Astro.props;
+const siteURL = import.meta.env.PUBLIC_SITE_URL;
+const ogImage = siteURL ? new URL('/og-concept.png', siteURL).href : undefined;
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#141512" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="description" content={description} />
+    <title>{title} — Concept non officiel par Devzair</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={`${title} — Concept non officiel`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="STANDARD / Concept indépendant par Devzair" />
+    {ogImage && <><meta property="og:image" content={ogImage} /><meta property="og:image:alt" content="STANDARD — Concept non officiel de refonte par Devzair, sans affiliation avec les studios" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /></>}
+  </head>
+  <body id="haut" class={`page-${current}`}>
+    <Header current={current} />
+    <main id="contenu" tabindex="-1"><slot /></main>
+    <Footer />
+    <script>
+      document.querySelectorAll<HTMLImageElement>('img[data-fallback]').forEach(img => {
+        const fallback = () => {
+          if (img.getAttribute('src') === img.dataset.fallback) return;
+          img.src = img.dataset.fallback!;
+          img.alt = img.dataset.fallbackAlt!;
+          img.closest('.media-frame')?.classList.add('is-illustration');
+          const note = img.closest('.media-frame')?.querySelector('[data-media-note]');
+          if (note) note.textContent = 'Visuel indisponible · Illustration d’intention Devzair';
+          const link = img.closest('.media-frame')?.querySelector<HTMLAnchorElement>('[data-lightbox]');
+          if (link) { link.href = img.dataset.fallback!; link.setAttribute('aria-label', `Agrandir : ${img.alt}`); }
+        };
+        img.addEventListener('error', fallback);
+        if (img.complete && img.naturalWidth === 0) fallback();
+      });
+    </script>
+  </body>
+</html>

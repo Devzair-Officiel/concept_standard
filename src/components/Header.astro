@@ -1,0 +1,50 @@
+---
+import { routes, concept } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { current: 'home' | 'architecture' | 'editions'; }
+const { current } = Astro.props;
+const links = [{ href: routes.home, label: 'Accueil', key: 'home' }, { href: routes.architecture, label: '01 — Architecture', key: 'architecture' }, { href: routes.editions, label: '02 — Éditions', key: 'editions' }];
+---
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<div class="concept-banner">{concept}</div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="site-logo" href="/" aria-label="ST/ND — accueil du concept indépendant">ST<span>/</span>ND.</a>
+    <nav class="desktop-nav" aria-label="Navigation principale">
+      {links.map(link => <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>)}
+    </nav>
+    <a class="header-studios micro" href="/#studios">Les studios <Icon /></a>
+    <button class="menu-toggle micro" type="button" aria-expanded="false" aria-controls="mobile-menu" hidden><span data-menu-label>Menu</span><Icon name="plus" /></button>
+  </div>
+  <nav id="mobile-menu" class="mobile-nav container" aria-label="Navigation mobile">
+    {links.map(link => <a href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}<Icon /></a>)}
+    <a href="/#studios">Les studios officiels<Icon /></a>
+  </nav>
+</header>
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const menu = document.querySelector<HTMLElement>('#mobile-menu');
+  if (toggle && menu) {
+    toggle.hidden = false;
+    menu.hidden = true;
+    const close = (returnFocus = false) => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.querySelector('[data-menu-label]')!.textContent = 'Menu';
+      if (returnFocus) toggle.focus();
+    };
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.querySelector('[data-menu-label]')!.textContent = open ? 'Fermer' : 'Menu';
+    });
+    menu.addEventListener('click', e => { if ((e.target as Element).closest('a')) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) close(true); });
+    document.addEventListener('click', e => { if (!(e.target as Element).closest('.site-header')) close(); });
+    document.querySelector('.site-header')?.addEventListener('focusout', e => {
+      if (!(e.currentTarget as Element).contains((e as FocusEvent).relatedTarget as Node)) close();
+    });
+    matchMedia('(min-width: 901px)').addEventListener('change', () => close());
+  }
+</script>

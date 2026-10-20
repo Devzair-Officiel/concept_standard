@@ -1,0 +1,39 @@
+---
+import Icon from './Icon.astro';
+---
+<dialog class="lightbox" id="photo-dialog" aria-labelledby="lightbox-title">
+  <div class="lightbox-bar"><h2 class="micro" id="lightbox-title">Regarder de plus près</h2><button class="circle-button" type="button" data-close-lightbox aria-label="Fermer le visuel agrandi"><Icon name="close" /></button></div>
+  <div class="lightbox-image"><img alt="" width="1200" height="900" /></div>
+  <p class="lightbox-caption" id="lightbox-caption"></p>
+</dialog>
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#photo-dialog');
+  if (dialog) {
+    let opener: HTMLElement | null = null;
+    document.addEventListener('click', e => {
+      const link = (e.target as Element).closest<HTMLAnchorElement>('[data-lightbox]');
+      if (!link) return;
+      const img = link.closest('.media-frame')?.querySelector('img');
+      if (!img) return;
+      e.preventDefault();
+      opener = link;
+      const enlarged = dialog.querySelector('img')!;
+      enlarged.src = img.currentSrc || img.src;
+      enlarged.alt = img.alt;
+      enlarged.onerror = () => { enlarged.onerror = null; enlarged.src = img.dataset.fallback!; enlarged.alt = img.dataset.fallbackAlt!; };
+      dialog.querySelector('#lightbox-caption')!.textContent = img.alt;
+      dialog.showModal();
+      document.body.classList.add('dialog-open');
+      dialog.querySelector<HTMLButtonElement>('[data-close-lightbox]')!.focus();
+    });
+    dialog.querySelector('[data-close-lightbox]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        dialog.querySelector<HTMLButtonElement>('[data-close-lightbox]')!.focus();
+      }
+    });
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => { document.body.classList.remove('dialog-open'); opener?.focus(); });
+  }
+</script>

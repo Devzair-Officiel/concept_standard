@@ -1,0 +1,170 @@
+{
+  "checkedAt": "2026-10-20T10:40:13.462Z",
+  "method": "HEAD only — no photographic body downloaded",
+  "availabilityIsNotPermission": true,
+  "images": [
+    {
+      "source": "https://nouveaustandard.fr/wp-content/uploads/2026/09/NS1989-WEB-13-683x1024.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html",
+        "standard-projet-architecture.html",
+        "standard-fiche-mobilier.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "89394",
+      "finalURL": "https://nouveaustandard.fr/wp-content/uploads/2026/09/NS1989-WEB-13-683x1024.jpg"
+    },
+    {
+      "source": "https://nouveaustandard.fr/wp-content/uploads/2026/09/NS1989-WEB-25_CreditPhotoPaulin-Giret-1024x683.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html",
+        "standard-projet-architecture.html",
+        "standard-fiche-mobilier.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "75848",
+      "finalURL": "https://nouveaustandard.fr/wp-content/uploads/2026/09/NS1989-WEB-25_CreditPhotoPaulin-Giret-1024x683.jpg"
+    },
+    {
+      "source": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-01-1.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html",
+        "standard-projet-architecture.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "872311",
+      "finalURL": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-01-1.jpg"
+    },
+    {
+      "source": "https://nouveaustandard.fr/wp-content/uploads/2025/08/NS_1976-28-WEB-1024x683.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "64929",
+      "finalURL": "https://nouveaustandard.fr/wp-content/uploads/2025/08/NS_1976-28-WEB-1024x683.jpg"
+    },
+    {
+      "source": "https://nouveaustandard.fr/wp-content/uploads/2025/08/NS_1976-15-WEB_CreditPhotoPaulinGiret-683x1024.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "62625",
+      "finalURL": "https://nouveaustandard.fr/wp-content/uploads/2025/08/NS_1976-15-WEB_CreditPhotoPaulinGiret-683x1024.jpg"
+    },
+    {
+      "source": "https://nouveaustandard.fr/wp-content/uploads/2026/01/1989-VueBureauNPS-1024x640.jpeg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "41029",
+      "finalURL": "https://nouveaustandard.fr/wp-content/uploads/2026/01/1989-VueBureauNPS-1024x640.jpeg"
+    },
+    {
+      "source": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-3.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "1009840",
+      "finalURL": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-3.jpg"
+    },
+    {
+      "source": "https://atelierstandard.fr/wp-content/uploads/2026/06/Vue-Sud-Keret.png",
+      "mockups": [
+        "maquette-standard-galerie-v2.html"
+      ],
+      "status": 200,
+      "type": "image/png",
+      "bytes": "2485613",
+      "finalURL": "https://atelierstandard.fr/wp-content/uploads/2026/06/Vue-Sud-Keret.png"
+    },
+    {
+      "source": "https://atelierstandard.fr/wp-content/uploads/2025/04/Maquette2-copie.jpg",
+      "mockups": [
+        "maquette-standard-galerie-v2.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "293866",
+      "finalURL": "https://atelierstandard.fr/wp-content/uploads/2025/04/Maquette2-copie.jpg"
+    },
+    {
+      "source": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-03.jpg",
+      "mockups": [
+        "standard-projet-architecture.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "921417",
+      "finalURL": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-03.jpg"
+    },
+    {
+      "source": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-02-.jpg",
+      "mockups": [
+        "standard-projet-architecture.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "913337",
+      "finalURL": "https://atelierstandard.fr/wp-content/uploads/2024/06/Vue-02-.jpg"
+    },
+    {
+      "source": "https://nouveaustandard.fr/wp-content/uploads/2026/01/1989-VueChaise-683x1024.jpeg",
+      "mockups": [
+        "standard-projet-architecture.html",
+        "standard-fiche-mobilier.html"
+      ],
+      "status": 200,
+      "type": "image/jpeg",
+      "bytes": "61431",
+      "finalURL": "https://nouveaustandard.fr/wp-content/uploads/2026/01/1989-VueChaise-683x1024.jpeg"
+    }
+  ],
+  "externalLinks": [
+    {
+      "url": "https://atelierstandard.fr/",
+      "status": 200,
+      "type": "text/html; charset=UTF-8",
+      "bytes": null,
+      "finalURL": "https://atelierstandard.fr/"
+    },
+    {
+      "url": "https://atelierstandard.fr/architecture/",
+      "status": 200,
+      "type": "text/html; charset=UTF-8",
+      "bytes": null,
+      "finalURL": "https://atelierstandard.fr/architecture/"
+    },
+    {
+      "url": "https://atelierstandard.fr/maison-ke/",
+      "status": 200,
+      "type": "text/html; charset=UTF-8",
+      "bytes": null,
+      "finalURL": "https://atelierstandard.fr/maison-ke/"
+    },
+    {
+      "url": "https://atelierstandard.fr/contact/",
+      "status": 200,
+      "type": "text/html; charset=UTF-8",
+      "bytes": null,
+      "finalURL": "https://atelierstandard.fr/contact/"
+    },
+    {
+      "url": "https://nouveaustandard.fr/",
+      "status": 200,
+      "type": "text/html; charset=UTF-8",
+      "bytes": "33416",
+      "finalURL": "https://nouveaustandard.fr/"
+    }
+  ]
+}

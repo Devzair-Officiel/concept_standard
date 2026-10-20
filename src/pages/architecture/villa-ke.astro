@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Media from '../../components/Media.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import Facts from '../../components/Facts.astro';
+import UniverseLink from '../../components/UniverseLink.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import Icon from '../../components/Icon.astro';
+import { media, useOfficialMedia } from '../../data/media';
+import { official, villaFacts } from '../../data/site';
+import '../../styles/detail.css';
+---
+<BaseLayout title="Villa KE / Atelier Standard" description="Villa KE, Finistère, étude 2023 au stade esquisse. Concept indépendant et non officiel de page projet, réalisé par Devzair." current="architecture">
+  <section class="arch-hero" aria-labelledby="villa-title">
+    <div class="container detail-topline micro"><a href="/">Accueil /</a><span>Atelier Standard · Architecture</span><span>Projet sélectionné / 01</span></div>
+    <div class="arch-cinema">
+      <Media item={media.villa} priority />
+      <div class="arch-over container"><div class="arch-over-top micro"><span>Finistère, France</span><span>Étude / 2023</span></div><div class="arch-over-bottom"><h1 id="villa-title">Villa<br /><span class="outline">KE.</span></h1><div class="arch-summary"><p>Un projet d’architecture.<br />Un paysage à considérer.<br />La relation au lieu comme point de départ.</p><a class="circle-button" href="#intention" aria-label="Découvrir l’intention du projet"><Icon name="down" /></a></div></div></div>
+    </div>
+    <div class="container arch-hero-foot micro"><span>165 m² / Surface de plancher</span><span>Esquisse · Projet à l’étude</span><a href="#reperes">Les repères du projet <Icon name="down" /></a></div>
+  </section>
+
+  <section class="arch-statement section-space container" id="intention" aria-labelledby="intention-title"><div class="statement-grid"><span class="micro">01 / L’intention</span><h2 class="display" id="intention-title">Habiter<br />le lieu.<br /><span class="tone">Écouter</span><br />le dehors.</h2></div><div class="statement-bottom"><span class="micro">Le paysage comme point de départ.</span><p class="copy">Un lieu, des usages, une histoire. Cette proposition de récit éditorial explore le dialogue entre l’habitat et son environnement. Une lecture d’intention imaginée pour ce concept, à préciser avec le studio.</p></div></section>
+
+  <section class="arch-chapter section-space" id="vues" aria-labelledby="vues-title"><div class="container"><SectionLabel index="02" label="Le projet en images" aside="Villa KE / Étude visuelle" /><div class="section-heading"><h2 class="display" id="vues-title">Lignes.<br />Lumière.<br />Horizon.</h2><div class="copy"><p>Prendre le temps du regard. Passer du volume à la façade, puis revenir à l’échelle du paysage.</p><p class="editorial-note">{useOfficialMedia ? 'Perspectives de projet issues du site officiel, et non photographies d’une réalisation livrée.' : 'Les compositions présentées ici sont des illustrations d’intention. Elles ne représentent pas le projet Villa KE.'}</p></div></div><figure class="arch-wide"><Media item={media.villaDetail} zoom /><figcaption class="image-caption micro">01 / Façade & lumière <span>{useOfficialMedia ? 'Perspective de projet' : 'Composition conceptuelle'}</span></figcaption></figure><div class="arch-detail-copy"><h3>Laisser le<br />paysage parler.</h3><p class="copy">L’architecture comme cadre du quotidien, ouverte sur le dehors. La maquette propose un rythme de visite ; les intentions propres au projet restent celles à présenter et valider avec Atelier Standard.</p></div></div></section>
+
+  <section class="arch-sequence section-space" aria-labelledby="sequence-title"><div class="container"><SectionLabel index="03" label="La séquence" aside="Le temps de regarder" /><div class="section-heading"><h2 class="display" id="sequence-title">Une autre<br /><span class="tone">échelle</span><br />du regard.</h2><p class="copy">Du lieu au détail, changer de cadrage pour laisser apparaître un autre rapport aux volumes.</p></div><div class="arch-diptych"><figure><Media item={media.villa} zoom /><figcaption class="image-caption micro">02 / Le paysage</figcaption></figure><figure><Media item={media.villaSide} zoom /><figcaption class="image-caption micro">03 / Un autre regard</figcaption></figure></div><p class="sequence-note micro">{useOfficialMedia ? 'Villa KE / Perspectives de projet — Esquisse' : 'Illustrations originales Devzair / Évocation libre, sans représentation du projet réel'}</p></div></section>
+
+  <section class="section-space container" id="reperes" aria-labelledby="facts-title"><SectionLabel index="04" label="Repères" aside="Un projet, une identité" /><div class="facts-layout"><div><h2 class="display" id="facts-title">Repères<br />du projet.</h2><p class="copy">Une étude au stade esquisse. Les informations de la maquette sont présentées sans présumer de l’avancement actuel du projet.</p></div><div><Facts items={villaFacts} /><ExternalLink href={official.villa}>Consulter le dossier officiel</ExternalLink><ExternalLink href={official.contact}>Contacter l’atelier</ExternalLink></div></div></section>
+  <UniverseLink to="editions" />
+  <Lightbox />
+</BaseLayout>

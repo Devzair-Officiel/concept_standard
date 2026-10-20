@@ -1,0 +1,9 @@
+# Exemple uniquement : adapter le domaine et le chemin au VPS.
+# Ce fichier n'est ni installé ni rechargé automatiquement.
+concept-standard.devzair.fr {
+    root * /var/www/concept-standard/dist
+    encode zstd gzip
+    header X-Robots-Tag "noindex,nofollow"
+    try_files {path} {path}/index.html
+    file_server
+}

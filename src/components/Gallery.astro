@@ -1,0 +1,63 @@
+---
+import { chairSlides } from '../data/media';
+import Media from './Media.astro';
+import Icon from './Icon.astro';
+---
+<div class="gallery" data-gallery role="region" aria-label="Regards sur la Chaise 1989">
+  <div class="gallery-stage">
+    <div class="gallery-panels">
+      {chairSlides.map((slide, i) => <figure class="gallery-panel" data-slide-panel id={`regard-${i + 1}`}>
+        <Media item={slide.media} zoom fit="contain" />
+        <figcaption class="micro">{String(i + 1).padStart(2, '0')} / {slide.label}</figcaption>
+      </figure>)}
+    </div>
+    <div class="gallery-aside" hidden data-gallery-aside>
+      <span class="gallery-number" data-gallery-number aria-hidden="true">01</span>
+      <div><h3 data-gallery-title>{chairSlides[0].title}</h3><p data-gallery-description>{chairSlides[0].description}</p></div>
+      <div class="gallery-controls"><button class="circle-button" type="button" data-prev aria-label="Vue précédente"><Icon name="prev" /></button><button class="circle-button" type="button" data-next aria-label="Vue suivante"><Icon name="next" /></button><span class="micro" data-gallery-counter aria-hidden="true">01 / 03</span></div>
+    </div>
+  </div>
+  <div class="gallery-thumbs" role="group" aria-label="Choisir une vue" data-gallery-thumbs hidden>
+    {chairSlides.map((slide, i) => <button type="button" class="gallery-thumb" data-slide={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`regard-${i + 1}`}>
+      <Media item={slide.media} note={false} fit="cover" />
+      <span class="micro">{String(i + 1).padStart(2, '0')} / {slide.label}</span><Icon />
+    </button>)}
+  </div>
+  <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-gallery-status></p>
+  <p class="gallery-help micro" data-gallery-help hidden>Utilisez aussi les flèches du clavier dans la galerie. Entrée pour agrandir.</p>
+</div>
+<script>
+  import { chairSlides } from '../data/media';
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach(gallery => {
+    const panels = [...gallery.querySelectorAll<HTMLElement>('[data-slide-panel]')];
+    const thumbs = [...gallery.querySelectorAll<HTMLButtonElement>('[data-slide]')];
+    let current = 0;
+    const choose = (next: number, announce = true) => {
+      current = (next + panels.length) % panels.length;
+      panels.forEach((panel, i) => { panel.hidden = i !== current; });
+      thumbs.forEach((thumb, i) => thumb.setAttribute('aria-pressed', String(i === current)));
+      const slide = chairSlides[current];
+      const number = String(current + 1).padStart(2, '0');
+      gallery.querySelector('[data-gallery-number]')!.textContent = number;
+      gallery.querySelector('[data-gallery-counter]')!.textContent = `${number} / 03`;
+      gallery.querySelector('[data-gallery-title]')!.textContent = slide.title;
+      gallery.querySelector('[data-gallery-description]')!.textContent = slide.description;
+      if (announce) gallery.querySelector('[data-gallery-status]')!.textContent = `Vue ${current + 1} sur ${panels.length} : ${slide.label}. ${slide.description}`;
+    };
+    gallery.querySelector<HTMLElement>('[data-gallery-aside]')!.hidden = false;
+    gallery.querySelector<HTMLElement>('[data-gallery-thumbs]')!.hidden = false;
+    gallery.querySelector<HTMLElement>('[data-gallery-help]')!.hidden = false;
+    gallery.classList.add('is-ready');
+    choose(0, false);
+    gallery.querySelector('[data-prev]')!.addEventListener('click', () => choose(current - 1));
+    gallery.querySelector('[data-next]')!.addEventListener('click', () => choose(current + 1));
+    thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => choose(i)));
+    gallery.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      const zoomFocused = !!(document.activeElement as Element)?.closest('[data-lightbox]');
+      choose(current + (e.key === 'ArrowRight' ? 1 : -1));
+      if (zoomFocused) panels[current].querySelector<HTMLElement>('[data-lightbox]')?.focus();
+    });
+  });
+</script>

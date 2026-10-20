@@ -1,0 +1,17 @@
+---
+import { routes } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { to: 'architecture' | 'editions'; }
+const { to } = Astro.props;
+const architecture = to === 'architecture';
+---
+<section class:list={['universe-link', { 'to-editions': !architecture }]}>
+  <div class="container">
+    <div class="section-label micro"><span>{architecture ? 'De l’objet à l’espace' : 'De l’espace à l’objet'}</span><span>Changer d’échelle</span></div>
+    <a href={routes[to]}>
+      <span class="micro">Poursuivre la visite / {architecture ? 'Villa KE' : 'Chaise 1989'}</span>
+      <h2>Découvrir<br /><span class="outline">{architecture ? 'Atelier' : 'Nouveau'}</span><br />Standard.</h2>
+      <div class="universe-link-bottom"><p>{architecture ? 'Le lieu, la lumière, le paysage. Explorer le projet Villa KE.' : 'Les formes, les matières, la mémoire. Rencontrer la Chaise 1989.'}</p><span class="circle-button"><Icon /></span></div>
+    </a>
+  </div>
+</section>

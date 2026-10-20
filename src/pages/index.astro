@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Media from '../components/Media.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import Icon from '../components/Icon.astro';
+import { media } from '../data/media';
+import { official, routes } from '../data/site';
+import '../styles/home.css';
+---
+<BaseLayout title="STANDARD / Galerie contemporaine" description="Concept indépendant et non officiel par Devzair. Une proposition éditoriale entre l’architecture d’Atelier Standard et le mobilier de Nouveau Standard." current="home">
+  <section class="gallery-hero" aria-labelledby="hero-title">
+    <div class="container hero-topline"><span class="micro">Nantes, France <span aria-hidden="true">↗</span></span><div class="universe-switch" role="group" aria-label="Choisir l’univers présenté" hidden><button type="button" class="pill" data-mode="editions" aria-pressed="true">01 <span>Nouveau Standard</span></button><button type="button" class="pill" data-mode="architecture" aria-pressed="false">02 <span>Atelier Standard</span></button></div></div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="micro hero-category" data-hero-category>Éditions & objets de collection <span class="short-rule"></span></p>
+        <h1 id="hero-title" class="hero-title"><span data-hero-name>Nouveau</span><span class="outline">Standard.</span></h1>
+        <div class="hero-copy-bottom"><p data-hero-description>La mémoire comme matière. Des pièces singulières entre souvenirs, artisanat et sensibilité contemporaine.</p><a class="text-link" data-hero-link href={routes.editions}>Découvrir <span data-hero-link-label>la chaise</span><span class="circle-button"><Icon /></span></a></div>
+      </div>
+      <div class="hero-art">
+        <div data-hero-visual="editions"><Media item={media.chair} priority /><a class="hero-art-link" href={routes.editions}><span class="micro">Collection 1989</span><span>La Chaise 1989 <Icon /></span></a><span class="hero-art-top micro">Éditions / Objet 01</span></div>
+        <div data-hero-visual="architecture" hidden><Media item={media.villa} /><a class="hero-art-link" href={routes.architecture}><span class="micro">Finistère / Esquisse</span><span>Villa KE <Icon /></span></a><span class="hero-art-top micro">Architecture / Projet 01</span></div>
+      </div>
+    </div>
+    <div class="container hero-tail micro"><span>Architecture · Mobilier · Matière · Mémoire</span><a href="#selection">Défiler pour découvrir <Icon name="down" /></a></div>
+  </section>
+  <div class="issue-strip"><div class="container"><span class="micro"><b>02</b> / Galerie contemporaine</span><span class="micro">Une proposition de regard / Devzair</span></div></div>
+
+  <section class="intro-section section-space container" id="regard" aria-labelledby="intro-title">
+    <div class="intro-top"><span class="micro">01 / Une écriture commune</span><span class="starburst" aria-hidden="true">✳</span></div>
+    <h2 class="display" id="intro-title">Des formes<br />qui <span class="blue">restent.</span></h2>
+    <div class="intro-bottom"><span class="micro">Le temps, le geste, la mémoire.</span><p class="copy">Du paysage à l’objet, deux disciplines en dialogue. L’architecture d’Atelier Standard et les éditions de Nouveau Standard se rencontrent dans une attention aux formes, aux matières et aux usages.</p></div>
+  </section>
+
+  <section class="works section-space" id="selection" aria-labelledby="selection-title">
+    <div class="container">
+      <SectionLabel index="02" label="Index des créations" aside="Espaces & objets" />
+      <div class="section-heading"><h2 class="display" id="selection-title">La sélection<span class="blue">.</span></h2><p class="copy">Deux échelles, un même regard.<br />Explorer un lieu, rencontrer une pièce.</p></div>
+      <div class="filter-bar" hidden><div class="filters" role="group" aria-label="Filtrer la sélection"><button class="pill" type="button" data-filter="all" aria-pressed="true">Tout voir</button><button class="pill" type="button" data-filter="architecture" aria-pressed="false">Architecture</button><button class="pill" type="button" data-filter="editions" aria-pressed="false">Éditions</button></div><span class="micro filter-count" role="status" aria-live="polite" aria-atomic="true">04 créations</span></div>
+      <div class="project-grid">
+        <ProjectCard title="Chaise 1989" subtitle="1989 / Métal & textile" href={routes.editions} item={media.chair} index="01" universe="editions" />
+        <ProjectCard title="Villa KE" subtitle="Finistère / Esquisse" href={routes.architecture} item={media.villa} index="02" universe="architecture" />
+        <ProjectCard title="Table 1976" subtitle="Voir le catalogue officiel ↗" href={official.nouveau} item={media.table} index="03" universe="editions" external />
+        <ProjectCard title="Domaine DA" subtitle="Voir les projets officiels ↗" href={official.architecture} item={media.domaineDA} index="04" universe="architecture" external />
+      </div>
+      <div class="selection-bottom"><p class="copy">Cette sélection accompagne une étude de refonte indépendante. Les catalogues complets sont à découvrir auprès des studios.</p><a class="text-link" href="#studios">Rencontrer les deux univers <Icon /></a></div>
+    </div>
+  </section>
+
+  <section class="material-interlude" aria-labelledby="material-title">
+    <Media item={media.collection} />
+    <div class="container interlude-content"><span class="micro">03 / Le geste et la matière</span><h2 class="display" id="material-title">Un geste.<br />Une <span>trace.</span></h2><div><p>Du dessin à la matière, une attention aux proportions et à ce que les objets gardent en mémoire.</p><a class="text-link" href={routes.editions}>Entrer dans la collection 1989 <Icon /></a></div></div>
+  </section>
+
+  <section class="studios section-space container" id="studios" aria-labelledby="studios-title">
+    <div class="studio-heading"><span class="micro">04 / Deux disciplines</span><h2 class="display" id="studios-title">Une seule<br /><span class="blue">écriture.</span></h2></div>
+    <div class="studio-grid">
+      <article><a class="studio-card" href={routes.architecture}><Media item={media.villa} /><div class="studio-name"><h3>Atelier<br />Standard.</h3><span class="circle-button"><Icon /></span></div></a><p class="copy">Des lieux pensés dans le dialogue avec les paysages et leurs habitants.</p><ExternalLink href={official.atelier}>Le site officiel / Architecture</ExternalLink></article>
+      <article><a class="studio-card" href={routes.editions}><Media item={media.table} /><div class="studio-name"><h3>Nouveau<br />Standard.</h3><span class="circle-button"><Icon /></span></div></a><p class="copy">Des objets de collection entre mémoire des intérieurs et sensibilité contemporaine.</p><ExternalLink href={official.nouveau}>Le site officiel / Design & éditions</ExternalLink></article>
+    </div>
+  </section>
+
+  <section class="contact-section section-space" aria-labelledby="contact-title"><div class="container"><SectionLabel index="05" label="Poursuivre le dialogue" aside="Auprès des studios officiels ↗" /><h2 class="display" id="contact-title">Parlons<br />de la suite.</h2><div class="contact-bottom"><p>Un lieu à imaginer, un objet à découvrir.<br />Retrouvez les studios sur leurs sites officiels.</p><div><ExternalLink href={official.contact}>Contacter Atelier Standard</ExternalLink><ExternalLink href={official.nouveau}>Découvrir Nouveau Standard</ExternalLink></div></div></div></section>
+</BaseLayout>
+<script>
+  import { routes } from '../data/site';
+  const hero = document.querySelector<HTMLElement>('.gallery-hero')!;
+  const switcher = document.querySelector<HTMLElement>('.universe-switch')!;
+  const modes = {
+    editions: { name: 'Nouveau', category: 'Éditions & objets de collection', description: 'La mémoire comme matière. Des pièces singulières entre souvenirs, artisanat et sensibilité contemporaine.', label: 'la chaise', href: routes.editions },
+    architecture: { name: 'Atelier', category: 'Architecture & paysages', description: 'Le paysage comme point de départ. Une architecture attentive au lieu, rigoureuse dans le geste et sensible dans ses intentions.', label: 'Villa KE', href: routes.architecture },
+  };
+  switcher.hidden = false;
+  switcher.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach(button => button.addEventListener('click', () => {
+    const key = button.dataset.mode as keyof typeof modes;
+    const mode = modes[key];
+    switcher.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    hero.querySelector('[data-hero-name]')!.textContent = mode.name;
+    hero.querySelector('[data-hero-category]')!.textContent = mode.category;
+    hero.querySelector('[data-hero-description]')!.textContent = mode.description;
+    hero.querySelector('[data-hero-link-label]')!.textContent = mode.label;
+    hero.querySelector<HTMLAnchorElement>('[data-hero-link]')!.href = mode.href;
+    hero.querySelectorAll<HTMLElement>('[data-hero-visual]').forEach(visual => { visual.hidden = visual.dataset.heroVisual !== key; });
+  }));
+  const filterBar = document.querySelector<HTMLElement>('.filter-bar')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('.project-card')];
+  filterBar.hidden = false;
+  document.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(button => button.addEventListener('click', () => {
+    const filter = button.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    let visible = 0;
+    cards.forEach(card => { card.hidden = filter !== 'all' && card.dataset.universe !== filter; if (!card.hidden) visible++; });
+    document.querySelector('.filter-count')!.textContent = `${String(visible).padStart(2, '0')} création${visible > 1 ? 's' : ''}`;
+  }));
+</script>

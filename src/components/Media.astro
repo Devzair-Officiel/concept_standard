@@ -1,0 +1,13 @@
+---
+import { displayMedia, useOfficialMedia, type Media } from '../data/media';
+import Icon from './Icon.astro';
+interface Props { item: Media; class?: string; priority?: boolean; zoom?: boolean; fit?: 'cover' | 'contain'; note?: boolean; }
+const { item, class: className = '', priority = false, zoom = false, fit = 'cover', note = true } = Astro.props;
+const display = displayMedia(item);
+---
+<div class:list={['media-frame', className, { 'is-illustration': !useOfficialMedia }]} style={`--media-fit:${fit}`}>
+  <img src={display.src} alt={display.alt} width={item.width} height={item.height} loading={priority ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : 'auto'} decoding="async" referrerpolicy="no-referrer" data-fallback={item.fallback} data-fallback-alt={item.fallbackAlt} />
+  {note && <span class="media-note" data-media-note>{display.note}</span>}
+  {zoom && <a class="zoom-link circle-button" href={display.src} data-lightbox aria-label={`Agrandir : ${display.alt}`}><Icon name="plus" /></a>}
+  <slot />
+</div>

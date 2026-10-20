@@ -1,0 +1,15 @@
+---
+import { official, concept } from '../data/site';
+import ExternalLink from './ExternalLink.astro';
+import Icon from './Icon.astro';
+---
+<footer class="site-footer" id="sites-officiels">
+  <div class="container">
+    <div class="footer-top">
+      <a class="site-logo" href="/" aria-label="ST/ND — retour à l’accueil">ST<span>/</span>ND.</a>
+      <p>{concept}.<br />Étude de design sans affiliation avec les studios.</p>
+      <div class="footer-links"><ExternalLink href={official.atelier}>Atelier Standard</ExternalLink><ExternalLink href={official.nouveau}>Nouveau Standard</ExternalLink></div>
+    </div>
+    <div class="footer-bottom micro"><span>Devzair / Étude de design · 2026</span><span>Architecture & objets de collection</span><a href="#haut">Retour en haut <Icon name="up" /></a></div>
+  </div>
+</footer>
