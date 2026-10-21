@@ -12,6 +12,8 @@
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 127.0.0.1",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "test": "playwright test",
+    "test:csp": "STANDARD_CSP_MODE=enforce playwright test",
+    "verify:deployment": "node scripts/verify-deployment.mjs",
     "audit:media": "node scripts/audit-media.mjs",
     "audit:links": "node scripts/audit-links.mjs"
   },

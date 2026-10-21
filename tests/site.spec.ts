@@ -1,14 +1,31 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import vercelConfig from '../vercel.json' with { type: 'json' };
 
 const routes = ['/', '/architecture/villa-ke', '/editions/chaise-1989'];
 
-test('les trois pages restent lisibles aux sept largeurs et ne chargent aucun tiers', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as Window & { cspViolations?: string[] }).cspViolations = [];
+    document.addEventListener('securitypolicyviolation', event => {
+      (window as Window & { cspViolations?: string[] }).cspViolations!.push(`${event.disposition}: ${event.effectiveDirective} ${event.blockedURI}`);
+    });
+  });
+});
+
+test.afterEach(async ({ page }) => {
+  if (!page.isClosed()) {
+    expect(await page.evaluate(() => (window as Window & { cspViolations?: string[] }).cspViolations ?? []), 'Aucune violation de la CSP sur la page').toEqual([]);
+  }
+});
+
+test('les trois pages restent lisibles aux sept largeurs et ne chargent aucun tiers', async ({ page, baseURL }) => {
   const externalRequests: string[] = [];
   const pageErrors: string[] = [];
-  await mkdir('docs/captures', { recursive: true });
-  page.on('request', request => { if (!request.url().startsWith('http://127.0.0.1:4322')) externalRequests.push(request.url()); });
+  await mkdir('test-results/captures', { recursive: true });
+  page.on('request', request => { if (new URL(request.url()).origin !== new URL(baseURL!).origin) externalRequests.push(request.url()); });
   page.on('pageerror', error => pageErrors.push(error.message));
   for (const route of routes) {
     for (const width of [320, 360, 390, 768, 1024, 1440, 1920]) {
@@ -16,6 +33,8 @@ test('les trois pages restent lisibles aux sept largeurs et ne chargent aucun ti
       const response = await page.goto(route);
       expect(response?.status()).toBe(200);
       await page.evaluate(() => document.fonts.ready);
+      const tooSmall = await page.locator('p, span, a, button, dt, dd, figcaption, .concept-banner').evaluateAll(elements => elements.filter(el => el.getClientRects().length && !el.closest('.sr-only') && el.childElementCount === 0 && el.textContent?.trim() && parseFloat(getComputedStyle(el).fontSize) < 11).map(el => ({ text: el.textContent, size: getComputedStyle(el).fontSize })));
+      expect(tooSmall, `${route} à ${width}px : textes de moins de 11px`).toEqual([]);
       await expect(page.locator('h1')).toBeVisible();
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
       await expect(page).toHaveTitle(/Concept non officiel par Devzair/);
@@ -35,7 +54,16 @@ test('les trois pages restent lisibles aux sept largeurs et ne chargent aucun ti
       expect(await page.locator('img[src]').evaluateAll(imgs => imgs.filter(img => !(img as HTMLImageElement).naturalWidth).map(img => (img as HTMLImageElement).src))).toEqual([]);
       if (width === 390 || width === 1440) {
         const slug = route === '/' ? 'accueil' : route.split('/').pop();
-        await page.screenshot({ path: `docs/captures/${slug}-${width}.png`, fullPage: true });
+        await page.waitForLoadState('networkidle');
+        await page.evaluate(async () => {
+          for (let y = 0; y < document.documentElement.scrollHeight; y += 700) {
+            window.scrollTo({ top: y, behavior: 'instant' });
+            await new Promise(resolve => setTimeout(resolve, 45));
+          }
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          return new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+        });
+        await page.screenshot({ path: `test-results/captures/${slug}-${width}.png`, fullPage: true });
       }
     }
   }
@@ -43,7 +71,66 @@ test('les trois pages restent lisibles aux sept largeurs et ne chargent aucun ti
   expect(externalRequests).toEqual([]);
 });
 
-test('la commutation des univers et les filtres conservent de vrais liens', async ({ page }) => {
+test('les six illustrations servies correspondent aux originaux du projet', async ({ request }) => {
+  for (const name of ['chair', 'chair-interior', 'collection', 'table', 'landscape', 'facade']) {
+    const path = `/illustrations/${name}.svg`;
+    const original = await readFile(new URL(`../public${path}`, import.meta.url));
+    const response = await request.get(path);
+    expect(response.status()).toBe(200);
+    const hash = (body: Buffer) => createHash('sha256').update(body).digest('hex');
+    expect(hash(await response.body()), path).toBe(hash(original));
+  }
+});
+
+test('les métadonnées et les protections HTTP correspondent au déploiement prévu', async ({ page }) => {
+  const titles: string[] = [];
+  const descriptions: string[] = [];
+  for (const route of routes) {
+    const response = await page.goto(route);
+    const headers = await response!.allHeaders();
+    const expected = Object.fromEntries(vercelConfig.headers.flatMap(rule => rule.headers.map(header => [header.key.toLowerCase(), header.value])));
+    if (process.env.STANDARD_CSP_MODE === 'enforce') {
+      expected['content-security-policy'] = expected['content-security-policy-report-only'];
+      delete expected['content-security-policy-report-only'];
+    }
+    for (const [key, value] of Object.entries(expected)) expect(headers[key], `${route}: ${key}`).toBe(value);
+    const canonical = `https://concept-standard.vercel.app${route}`;
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonical);
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', canonical);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://concept-standard.vercel.app/og-concept.png');
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Concept non officiel/);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
+    titles.push(await page.title());
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    descriptions.push(description!);
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', description!);
+    expect(await page.locator('script:not([src]), style, [style], [onclick]').count(), 'Pas de script, style ou gestionnaire inline').toBe(0);
+  }
+  expect(new Set(titles).size).toBe(3);
+  expect(new Set(descriptions).size).toBe(3);
+});
+
+test('les repères de Villa KE gardent un contraste minimum de 4,5:1', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/architecture/villa-ke');
+    const colors = await page.locator('.arch-over-top > span').last().evaluate(el => {
+      const style = getComputedStyle(el);
+      return { text: style.color, background: style.backgroundColor, size: parseFloat(style.fontSize) };
+    });
+    const luminance = (color: string) => {
+      const rgb = color.match(/[\d.]+/g)!.map(Number);
+      const linear = rgb.slice(0, 3).map(value => { const x = value / 255; return x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; });
+      return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+    };
+    expect(colors.background).toBe('rgb(20, 21, 18)');
+    const [light, dark] = [luminance(colors.text), luminance(colors.background)].sort((a, b) => b - a);
+    expect((light + .05) / (dark + .05)).toBeGreaterThanOrEqual(4.5);
+    expect(colors.size).toBeGreaterThanOrEqual(11);
+  }
+});
+
+test('la commutation des univers et les filtres conservent de vrais liens', async ({ page, baseURL }) => {
   await page.goto('/');
   await page.locator('[data-mode="architecture"]').click();
   await expect(page.locator('[data-hero-name]')).toHaveText('Atelier');
@@ -62,7 +149,7 @@ test('la commutation des univers et les filtres conservent de vrais liens', asyn
   await page.locator('.desktop-nav a[href="/editions/chaise-1989"]').click();
   await expect(page).toHaveURL(/editions\/chaise-1989$/);
   await page.locator('.header-inner .site-logo').click();
-  await expect(page).toHaveURL('http://127.0.0.1:4322/');
+  await expect(page).toHaveURL(new URL('/', baseURL).href);
   await page.locator('[data-filter="editions"]').click();
   await expect(page.locator('.project-card:visible')).toHaveCount(2);
   await page.locator('.project-card a[href="/editions/chaise-1989"]').click();
@@ -134,8 +221,8 @@ test('les pages passent les contrôles automatiques WCAG AA sur mobile et deskto
   }
 });
 
-test('le contenu reste navigable sans JavaScript et respecte les mouvements réduits', async ({ browser, page }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+test('le contenu reste navigable sans JavaScript et respecte les mouvements réduits', async ({ browser, page, baseURL }) => {
+  const context = await browser.newContext({ baseURL, javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const noJSPage = await context.newPage();
   for (const route of routes) {
     await noJSPage.goto(route);

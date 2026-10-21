@@ -1,6 +1,6 @@
 # STANDARD — Concept indépendant par Devzair
 
-Site Astro statique de démonstration, non commandé, non officiel, sans affiliation avec Atelier Standard ou Nouveau Standard. Trois pages, aucun CMS, serveur applicatif, formulaire, analytics ou cookie. Aucun déploiement public n’a été effectué.
+Site Astro statique de démonstration, non commandé, non officiel, sans affiliation avec Atelier Standard ou Nouveau Standard. Trois pages, aucun CMS, serveur applicatif, formulaire, analytics ou cookie. Version publique de référence : https://concept-standard.vercel.app/. Les corrections finales décrites dans [docs/CORRECTIONS-FINALES.md](docs/CORRECTIONS-FINALES.md) ont été publiées et validées en production le **21 octobre 2026**.
 
 ## Lancer localement
 
@@ -34,7 +34,7 @@ Les cartes Chaise 1989 et Villa KE conduisent à ces pages. Table 1976 et Domain
 
 L’[inventaire des médias](docs/MEDIAS.md) recense les 12 URL issues des trois maquettes, leurs fichiers sources et leurs réponses HTTP. La vérification utilise uniquement HEAD, sans récupérer le corps des photographies. Les données sont centralisées dans `src/data/media.ts`. Les autorisations d’affichage, recadrage, zoom et domaine, ainsi que les crédits, restent à obtenir auprès des studios et auteurs. Une URL publique et un statut 200 ne donnent aucun droit de réutilisation.
 
-Après obtention des autorisations pour tous les médias affichés : copier `.env.example` vers `.env`, définir `PUBLIC_USE_OFFICIAL_MEDIA=true`, redémarrer le serveur ou reconstruire. Cette option affiche les fichiers distants directement ; elle ne les télécharge pas dans le projet. En cas d’erreur, un secours local remplace le visuel et son texte alternatif. Ne pas activer globalement l’option si seuls certains médias sont autorisés : adapter d’abord le manifeste. Le `srcset` des photographies n’est pas inventé ; les SVG sont indépendants de la résolution. Pour une future version photographique, ajouter des variantes uniquement avec autorisation et dimensions vérifiées.
+Après obtention des autorisations pour tous les médias affichés : copier `.env.example` vers `.env`, définir `PUBLIC_USE_OFFICIAL_MEDIA=true`, adapter `img-src` aux seuls hôtes autorisés, puis retester la CSP avant de reconstruire et publier. Cette option affiche les fichiers distants directement ; elle ne les télécharge pas dans le projet. En cas d’erreur, un secours local remplace le visuel et son texte alternatif. Ne pas activer globalement l’option si seuls certains médias sont autorisés : adapter d’abord le manifeste. Le `srcset` des photographies n’est pas inventé ; les SVG sont indépendants de la résolution. Pour une future version photographique, ajouter des variantes uniquement avec autorisation et dimensions vérifiées.
 
 La [lecture des maquettes](docs/ANALYSE-MAQUETTES.md) explique ce qui a été conservé et harmonisé. Les dimensions et matériaux de la chaise ont été revérifiés sur le [catalogue officiel](https://nouveaustandard.fr/). Les repères de Villa KE reprennent les libellés du HTML fourni et du brief : Finistère, 165 m² de surface de plancher, étude 2023, esquisse. Le [dossier officiel](https://atelierstandard.fr/maison-ke/) répond en HTTP 200 mais n’expose pas ces libellés dans le HTML accessible lors du contrôle : les revalider avec le studio avant publication. Aucun état d’avancement actuel n’est présumé. Les paragraphes narratifs sont des propositions éditoriales.
 
@@ -48,25 +48,32 @@ npm test
 npm run audit:media
 ```
 
-Les tests utilisent **un seul worker et un navigateur à la fois**. Ils démarrent le serveur du build sur 127.0.0.1:4322 puis l’arrêtent. Exécuter `npm run build` avant les tests. Chrome est utilisé automatiquement s’il existe à `/usr/bin/google-chrome` ; sinon le Chromium de Playwright est utilisé. Un chemin personnalisé peut aussi être fourni :
+Les tests utilisent **un seul worker et un navigateur à la fois**. Ils démarrent un serveur QA du build sur 127.0.0.1:4322 avec les en-têtes de `vercel.json`, puis l’arrêtent. `npm run preview` reste l’aperçu Astro standard ; il n’applique pas les en-têtes Vercel. Exécuter `npm run build` avant les tests. Chrome est utilisé automatiquement s’il existe à `/usr/bin/google-chrome` ; sinon le Chromium de Playwright est utilisé. Un chemin personnalisé peut aussi être fourni :
 
 ```bash
 PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/google-chrome npm test
 ```
 
-Les contrôles couvrent les trois routes aux largeurs 320, 360, 390, 768, 1024, 1440 et 1920, le débordement horizontal, la superposition des cartes, les images, les liens, le menu, les filtres, la galerie, le focus, Échap, l’accessibilité automatique axe WCAG AA, l’absence de requêtes tierces, le mode sans JavaScript et les mouvements réduits. Les contrôles automatisés ne remplacent pas une revue avec lecteur d’écran. Passage final : **7 scénarios réussis**. Lighthouse mobile sur l’accueil local : performance **100**, accessibilité **100**, bonnes pratiques **100**, SEO **66** (indexation volontairement bloquée). Conditions, limites, captures et rapports dans [docs/VERIFICATIONS.md](docs/VERIFICATIONS.md).
+Les contrôles couvrent les trois routes aux largeurs 320, 360, 390, 768, 1024, 1440 et 1920, le débordement horizontal, la superposition des cartes, la taille minimale de 11 px, les images, les liens, le menu, les filtres, la galerie, le focus, Échap, l’accessibilité automatique axe WCAG AA, l’absence de requêtes tierces, le mode sans JavaScript et les mouvements réduits. Ils vérifient aussi les métadonnées, les en-têtes, le contraste des repères Villa KE et l’identité des six illustrations. Les captures actuelles sont écrites dans `test-results/captures/` (ignoré par Git). Les contrôles automatisés ne remplacent pas une revue avec lecteur d’écran.
+
+```bash
+# Politique CSP complète imposée uniquement sur le serveur de test local :
+npm run test:csp
+```
+
+Les résultats historiques Lighthouse et les premières captures sont conservés dans [docs/VERIFICATIONS.md](docs/VERIFICATIONS.md). Ils ne sont pas des mesures de la version corrigée. Les résultats locaux, de Preview et de production des corrections sont dans [docs/CORRECTIONS-FINALES.md](docs/CORRECTIONS-FINALES.md), avec la procédure pour une prochaine publication autorisée.
 
 `npm run audit:media` nécessite le réseau et actualise l’inventaire daté. Les liens externes peuvent évoluer. Le meta robots `noindex,nofollow` est présent partout ; robots.txt autorise leur lecture. Ce mécanisme ne constitue pas un contrôle d’accès : utiliser la protection de déploiement de l’hébergeur pour une présentation confidentielle.
 
 ## Vercel — mode prioritaire, après feu vert
 
-Le projet utilise le rendu statique natif d’Astro : aucun adaptateur serveur n’est requis. `vercel.json` déclare Astro, `npm ci`, `npm run build`, `dist/`, les URL sans extension et un en-tête X-Robots-Tag. Voir la [documentation officielle Astro sur Vercel](https://vercel.com/docs/frameworks/frontend/astro).
+Le projet utilise le rendu statique natif d’Astro : aucun adaptateur serveur n’est requis. `vercel.json` déclare Astro, `npm ci`, `npm run build`, `dist/`, les URL sans extension, X-Robots-Tag et les protections HTTP. Une CSP minimale protège déjà l’encadrement, les objets et l’URL de base ; la politique complète est en **Report-Only** pour validation sur l’hébergement réel. Voir la [procédure des corrections finales](docs/CORRECTIONS-FINALES.md) et la [documentation officielle Astro sur Vercel](https://vercel.com/docs/frameworks/frontend/astro).
 
-1. Après votre accord pour le push, publier le dépôt Git local autonome sur votre forge. Les sources, le lockfile et `.gitignore` sont prêts ; aucun push n’a été effectué.
-2. Dans Vercel : **Add New → Project → Import Git Repository**, choisir ce dépôt et la racine du projet.
+1. Après votre accord pour le commit/push ou le déploiement CLI, publier les corrections dans le projet Vercel **existant** `concept-standard`. Un push vers une branche connectée peut déclencher un déploiement automatique.
+2. Préparer d’abord une prévisualisation et la vérifier avant promotion en production. La version actuelle a été validée en Preview, puis publiée et vérifiée sur le domaine public le 21 octobre 2026.
 3. Vérifier : framework **Astro**, installation `npm ci`, build `npm run build`, sortie `dist`, Node 22 compatible avec le minimum ci-dessus.
 4. Garder `PUBLIC_USE_OFFICIAL_MEDIA=false` tant que les droits ne sont pas confirmés. Lancer **Deploy** seulement après validation : Vercel fournit alors une URL `*.vercel.app`.
-5. Définir `PUBLIC_SITE_URL` avec cette URL HTTPS réelle et reconstruire pour émettre l’URL absolue de l’aperçu Open Graph. Sans valeur, les métadonnées texte restent présentes et aucun domaine n’est inventé.
+5. La base des métadonnées est désormais l’URL publique connue `https://concept-standard.vercel.app`. `PUBLIC_SITE_URL` peut la remplacer en cas de changement explicite de domaine. Les canonical et `og:url` restent propres à chaque route et `og:image` utilise `/og-concept.png` en URL absolue.
 6. Pour `concept-standard.devzair.fr`, ajouter ce nom dans **Project Settings → Domains**. Recopier uniquement les enregistrements DNS réellement demandés par Vercel auprès de votre fournisseur, puis attendre la validation et le certificat. [Procédure officielle des domaines](https://vercel.com/docs/domains/working-with-domains/add-a-domain). Aucun DNS n’a été modifié.
 
 Alternative en ligne de commande, à exécuter uniquement après accord de publication :
@@ -78,9 +85,12 @@ npm run build
 npx vercel
 # Puis, lorsque la prévisualisation est validée :
 npx vercel --prod
+# Après publication autorisée :
+npm run verify:deployment -- https://concept-standard.vercel.app
+PLAYWRIGHT_BASE_URL=https://concept-standard.vercel.app npm test
 ```
 
-Ces deux dernières commandes créent des déploiements ; elles n’ont pas été lancées. Le fichier `public/og-concept.png` est une carte originale de 1200 × 630 pixels marquée « concept non officiel », exportée depuis le SVG fourni. Aucun visuel tiers n’est utilisé pour l’Open Graph.
+Les commandes `npx vercel` et `npx vercel --prod` créent des déploiements ; les commandes `verify:deployment` et Playwright vérifient le site publié. Ces étapes ont été réalisées avec accord pour la version actuelle. Le fichier `public/og-concept.png` est une carte originale de 1200 × 630 pixels marquée « concept non officiel », exportée depuis le SVG fourni. Aucun visuel tiers n’est utilisé pour l’Open Graph.
 
 ## VPS + Caddy — option, après validation
 
@@ -117,6 +127,6 @@ deploy/                Exemple Caddy non appliqué
 dist/                  Build statique généré, ignoré par Git
 ```
 
-Les originaux HTML sont conservés à la racine pour comparaison. `package-lock.json` fixe les versions ; `.nvmrc` documente Node. Le dépôt Git local est autonome ; sa publication sur votre forge reste une étape à faire après accord.
+Les originaux HTML sont conservés à la racine pour comparaison. `package-lock.json` fixe les versions ; `.nvmrc` documente Node. Le dépôt Git local utilise le dépôt distant `Devzair-Officiel/concept_standard` ; les commits et push nécessitent l’accord du propriétaire.
 
-Décisions restantes : autorisations et crédits des médias, validation des repères Villa KE et des textes éditoriaux, URL finale, choix de protection de l’aperçu et feu vert de publication.
+Pour une éventuelle version avec photographies tierces, les autorisations et crédits des médias restent à obtenir. Les repères Villa KE et les textes éditoriaux restent à revalider avec les studios.
